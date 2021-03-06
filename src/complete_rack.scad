@@ -14,9 +14,9 @@ module rack_structure(units) {
     // extrusions
     color("DimGray") {
         translate([extrusion_dim/2, extrusion_dim/2, plate_thickness]) extrusion_rail(units);
-        translate([inner_width + extrusion_dim*3/2, extrusion_dim/2, plate_thickness]) extrusion_rail(units);
-        translate([inner_width + extrusion_dim*3/2, inner_depth + extrusion_dim*3/2, plate_thickness]) extrusion_rail(units);
-        translate([extrusion_dim/2, inner_depth + extrusion_dim*3/2, plate_thickness]) extrusion_rail(units);
+        translate([inner_width + extrusion_dim * 3/2, extrusion_dim/2, plate_thickness]) extrusion_rail(units);
+        translate([inner_width + extrusion_dim * 3/2, inner_depth + extrusion_dim * 3/2, plate_thickness]) extrusion_rail(units);
+        translate([extrusion_dim/2, inner_depth + extrusion_dim * 3/2, plate_thickness]) extrusion_rail(units);
     }
 
     // switch
@@ -29,16 +29,16 @@ module rack_structure(units) {
     // switch plate
     color("SteelBlue") {
         plate_unit = 2;
-        translate([full_width/2, 0, plate_unit*rack_unit/2 + plate_thickness]) {
-            rotate([90, 0, 0]) {
-                blank_face_plate(plate_unit);
+        translate([full_width/2, -plate_thickness, plate_unit * rack_unit/2 + plate_thickness]) {
+            rotate([-90, 180, 0]) {
+                unifi_switch_face_plate();
             }
         }
     }
 
     // other plates
     for (i = [2 : 9]) {
-        translate([full_width/2, 0, i*rack_unit + rack_unit/2 + plate_thickness]) {
+        translate([full_width/2, 0, (i * rack_unit) + rack_unit/2 + plate_thickness]) {
             rotate([90, 0, 0]) {
                 blank_face_plate(1);
             }
@@ -53,7 +53,7 @@ module rack_structure(units) {
         }
 
         // top plate
-        translate([full_width/2, full_depth/2, plate_thickness*2+extrude_len]) {
+        translate([full_width/2, full_depth/2, (plate_thickness * 2) + extrude_len]) {
             rotate([180, 0, 0]) {
                 rack_end_plate();
             }
@@ -62,11 +62,11 @@ module rack_structure(units) {
 
     // Handles
     color("BurlyWood") {
-        translate([full_width-extrusion_dim/2, full_depth/2, plate_thickness*2+extrude_len]) {
+        translate([full_width - extrusion_dim/2, full_depth/2, (plate_thickness * 2) + extrude_len]) {
             full_handle();
         }
 
-        translate([extrusion_dim/2, full_depth/2, plate_thickness*2+extrude_len]) {
+        translate([extrusion_dim/2, full_depth/2, (plate_thickness * 2) + extrude_len]) {
             full_handle();
         }
     }

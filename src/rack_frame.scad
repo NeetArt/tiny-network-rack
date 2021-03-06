@@ -3,13 +3,13 @@ include<common.scad>;
 //flat_screw(Five_mm_screw_hole, 10);
 //full_handle();
 //extrusion_slide(Units, true, true);
-//extrusion_rail(Units);
+extrusion_rail(Units);
 //rack_end_plate();
 //color("Tomato") model_split_shape(full_width, full_depth, true, false);
 //color("DarkOrange") model_split_shape(full_width, full_depth, false, false);
-color("Tomato") { rack_end_plate_sections(1);}
+//color("Tomato") { rack_end_plate_sections(1);}
 //color("DarkOrange") {rack_end_plate_sections(2);}
-
+//rack_support_plate(false);
 
 /**********************/
 /*** 2020 extrusion ***/
@@ -27,15 +27,15 @@ module extrusion_rail(units) {
             cube([extrusion_dim, extrusion_dim, extrude_len]);
         }
 
-        slide_distance = 7.8/2; // Slide distance from center
+        slide_distance = 8.2/2; // Slide distance from center
         // Slide cuts
-        translate([0, slide_distance, -slip]) rotate([0, 0, 0]) extrusion_slide(extrude_len+1, false, true);
-        translate([-slide_distance, 0, -slip]) rotate([0, 0, 90]) extrusion_slide(extrude_len+1, false, true);
-        translate([0, -slide_distance, -slip]) rotate([0, 0, 180]) extrusion_slide(extrude_len+1, false, true);
-        translate([slide_distance, 0, -slip]) rotate([0, 0, -90]) extrusion_slide(extrude_len+1, false, true);
+        translate([0, slide_distance, -slip]) rotate([0, 0, 0]) extrusion_slide(extrude_len + 1, false, true);
+        translate([-slide_distance, 0, -slip]) rotate([0, 0, 90]) extrusion_slide(extrude_len + 1, false, true);
+        translate([0, -slide_distance, -slip]) rotate([0, 0, 180]) extrusion_slide(extrude_len + 1, false, true);
+        translate([slide_distance, 0, -slip]) rotate([0, 0, -90]) extrusion_slide(extrude_len + 1, false, true);
 
         // Center hole
-        translate([0, 0, -slip]) cylinder(d=Five_mm_screw_hole, extrude_len+slip*2);
+        translate([0, 0, -slip]) cylinder(d=Five_mm_screw_hole, extrude_len + slip * 2);
     }
 }
 
@@ -44,26 +44,29 @@ module extrusion_rail(units) {
  * Extrusion cutout slide. Dimensions differ between various brands of 2020 extrusion.
  * Slide dimensions:
  *
- *       --------      <- 6
+ *       --------      <- 5
  *       |      |      <- thickness: 1.5 or 2.0
- *   -----      -----  <- 11
- *   |              |  <- 1.6
- *    \            /   <- [|] 2.7 (not the length of the edge but the vertical distance)
- *     ------------    <- 6
+ *   -----      -----  <- 10.5
+ *   |              |  <- 1.5
+ *    \            /   <- [|] 2.5 (not the length of the edge but the vertical distance)
+ *     ------------    <- 5.5
  *
  */
 module extrusion_slide(units, hole=false, for_rail=false) {
     extrude_len = rack_unit * units;
     thickness = for_rail ? 2.0 : 1.5;
-    slide_depth = thickness + 1.6 + 2.7 + slip;
+    slide_depth = thickness + 1.5 + 2.5 + slip;
 
     difference() {
         union() {
-            translate([-3, 4.3-slip, 0]) {
-                cube([6, thickness+slip, extrude_len]);
+            translate([-2.5, 4 - slip, 0]) {
+                cube([5, thickness + slip, extrude_len]);
             }
             linear_extrude(extrude_len) {
-                polygon([[-11/2, 4.3], [11/2, 4.3], [11/2, 4.3-1.6], [11/2-5/2, 0], [-11/2+5/2, 0], [-11/2, 4.3-1.6]]);
+                polygon([
+                    [-10.5/2, 4], [10.5/2, 4],
+                    [10.5/2, 4 - 1.5], [10.5/2 - 5/2, 0],
+                    [-10.5/2 + 5/2, 0], [-10.5/2, 4 - 1.5]]);
             }
         }
         if (hole) {
@@ -71,12 +74,12 @@ module extrusion_slide(units, hole=false, for_rail=false) {
                 translate([0, 0, rack_unit * i]) {
                     translate([0, 0, (rack_unit/4)*1]) {
                         rotate([90, 0, 0]) {
-                            cylinder(h=slide_depth*2, d=Four_mm_screw, center=true);
+                            cylinder(h=slide_depth * 2, d=Four_mm_screw, center=true);
                         }
                     }
                     translate([0, 0, (rack_unit/4)*3]) {
                         rotate([90, 0, 0]) {
-                            cylinder(h=slide_depth*2, d=Four_mm_screw, center=true);
+                            cylinder(h=slide_depth * 2, d=Four_mm_screw, center=true);
                         }
                     }
                 }
@@ -111,7 +114,7 @@ module rack_end_plate() {
 
             // Plate inner hole
             translate([0, 0, end_plate_thickness/2]) {
-                cube([inner_width, inner_depth, end_plate_thickness+slip*2], center=true);
+                cube([inner_width, inner_depth, end_plate_thickness + slip * 2], center=true);
             }
 
             // Countersink holes
@@ -161,17 +164,44 @@ module rack_end_plate() {
 module rack_end_plate_sections(section) {
     if (section == 1) {
         intersection() {
-            model_split_shape(full_width+plate_thickness, full_depth+plate_thickness, is_female=false, across_width=false);
+            model_split_shape(full_width + plate_thickness, full_depth + plate_thickness, is_female=false, across_width=false);
             rack_end_plate();
         }
     } else if (section == 2) {
         intersection() {
-            model_split_shape(full_width+plate_thickness, full_depth+plate_thickness, is_female=true, across_width=false);
+            model_split_shape(full_width + plate_thickness, full_depth + plate_thickness, is_female=true, across_width=false);
             rack_end_plate();
         }
     }
 }
 
+
+/*
+ *
+ * Rack support plates for switch
+ *
+ */
+module rack_support_plate(across_width=false) {
+    plate_length = across_width ? full_width : full_depth;
+    difference() {
+        translate([0, 0, plate_thickness/2]) {
+            minkowski() {
+                cube([plate_length - plate_thickness/2, extrusion_dim - plate_thickness, 0.01], center=true);
+                sphere(d=plate_thickness);
+            }
+        }
+
+        // Screw holes
+        // Left
+        translate([-plate_length/2 + extrusion_dim/2, 0, 0]) {
+            flat_screw(Five_mm_screw_hole, 2);
+        }
+        // Right
+        translate([plate_length/2 - extrusion_dim/2, 0, 0]) {
+            flat_screw(Five_mm_screw_hole, 2);
+        }
+    }
+}
 
 
 /*******************/
@@ -209,7 +239,7 @@ module half_handle() {
         union() {
             // Horizontal handle
             horz_extrude_length = half_length - (finger_clearance / tan(handle_angle)) - (extrusion_dim / sin(handle_angle));
-            translate([0, 0, extrusion_dim/2+finger_clearance]) {
+            translate([0, 0, extrusion_dim/2 + finger_clearance]) {
                 rotate([-90, 0, 0]) {
                     linear_extrude(horz_extrude_length) {
                         handle_polygon();
@@ -222,7 +252,7 @@ module half_handle() {
             translate([0, half_length, 0]) {
                 rotate([90 - handle_angle, 0, 0]) {
                     translate([0, -extrusion_dim/2, 0])
-                    linear_extrude(angle_extrude_length+slip) {
+                    linear_extrude(angle_extrude_length + slip) {
                         handle_polygon();
                     }
                 }
@@ -240,8 +270,8 @@ module half_handle() {
             }
         }
         
-        translate([-extrusion_dim, 0, -extrusion_dim*4]) {
-            cube([extrusion_dim*2, half_length*2, extrusion_dim*4]);
+        translate([-extrusion_dim, 0, -extrusion_dim * 4]) {
+            cube([extrusion_dim * 2, half_length * 2, extrusion_dim * 4]);
         }
 
         // Screw shank
@@ -250,7 +280,7 @@ module half_handle() {
         screw_head_height = (extrusion_dim/2 - screw_size) * tan(handle_angle);
         translate([0, half_length - extrusion_dim/2, screw_head_height]) {
             rotate([180, 0, 0]) {
-                flat_screw(Five_mm_screw_hole, finger_clearance+extrusion_dim);
+                flat_screw(Five_mm_screw_hole, finger_clearance + extrusion_dim);
             }
         }
     }
