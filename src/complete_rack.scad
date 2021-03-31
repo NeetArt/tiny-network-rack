@@ -12,7 +12,7 @@ rack_structure(Units);
 module rack_structure(units) {
     extrude_len = rack_unit * units;
     // extrusions
-    color("DimGray") {
+    color("Black") {
         translate([extrusion_dim/2, extrusion_dim/2, plate_thickness]) extrusion_rail(units);
         translate([inner_width + extrusion_dim * 3/2, extrusion_dim/2, plate_thickness]) extrusion_rail(units);
         translate([inner_width + extrusion_dim * 3/2, inner_depth + extrusion_dim * 3/2, plate_thickness]) extrusion_rail(units);
@@ -27,23 +27,38 @@ module rack_structure(units) {
     }
 
     // switch plate
-    color("SteelBlue") {
-        plate_unit = 2;
-        translate([full_width/2, -plate_thickness, plate_unit * rack_unit/2 + plate_thickness]) {
-            rotate([-90, 180, 0]) {
-                unifi_switch_face_plate();
-            }
+    plate_unit = 2;
+    color("DarkGray")
+    translate([full_width/2, -plate_thickness, plate_unit * rack_unit/2 + plate_thickness]) {
+        rotate([-90, 180, 0]) {
+            unifi_switch_face_plate();
         }
     }
 
-    // other plates
-    for (i = [2 : 9]) {
-        translate([full_width/2, 0, (i * rack_unit) + rack_unit/2 + plate_thickness]) {
-            rotate([90, 0, 0]) {
-                blank_face_plate(1);
-            }
+    // Patch panel
+    color("DarkGray")
+    translate([full_width/2, -plate_thickness, rack_unit * 2 + rack_unit/2 + plate_thickness]) {
+        rotate([-90, 180, 0]) {
+            patch_panel_face_plate();
         }
     }
+
+    // Cloud key
+    color("DarkGray")
+    translate([full_width/2, -plate_thickness, rack_unit * 3 + rack_unit/2 + plate_thickness]) {
+        rotate([-90, 180, 0]) {
+            unifi_cloud_key_plate();
+        }
+    }
+
+    // // other plates
+    // for (i = [4 : 9]) {
+    //     translate([full_width/2, 0, (i * rack_unit) + rack_unit/2 + plate_thickness]) {
+    //         rotate([90, 0, 0]) {
+    //             blank_face_plate(1);
+    //         }
+    //     }
+    // }
 
     // Rack plates
     color("Black") {

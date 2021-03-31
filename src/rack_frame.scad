@@ -1,9 +1,9 @@
 include<common.scad>;
 
-//flat_screw(Five_mm_screw_hole, 10);
+//flat_screw(five_mm_screw_hole, 10);
 //full_handle();
-//extrusion_slide(Units, true, true);
-extrusion_rail(Units);
+extrusion_slide(5, true, true);
+//extrusion_rail(Units);
 //rack_end_plate();
 //color("Tomato") model_split_shape(full_width, full_depth, true, false);
 //color("DarkOrange") model_split_shape(full_width, full_depth, false, false);
@@ -35,7 +35,7 @@ module extrusion_rail(units) {
         translate([slide_distance, 0, -slip]) rotate([0, 0, -90]) extrusion_slide(extrude_len + 1, false, true);
 
         // Center hole
-        translate([0, 0, -slip]) cylinder(d=Five_mm_screw_hole, extrude_len + slip * 2);
+        translate([0, 0, -slip]) cylinder(d=five_mm_screw_hole, extrude_len + slip * 2);
     }
 }
 
@@ -74,12 +74,12 @@ module extrusion_slide(units, hole=false, for_rail=false) {
                 translate([0, 0, rack_unit * i]) {
                     translate([0, 0, (rack_unit/4)*1]) {
                         rotate([90, 0, 0]) {
-                            cylinder(h=slide_depth * 2, d=Four_mm_screw, center=true);
+                            cylinder(h=slide_depth * 2, d=four_mm_screw, center=true);
                         }
                     }
                     translate([0, 0, (rack_unit/4)*3]) {
                         rotate([90, 0, 0]) {
-                            cylinder(h=slide_depth * 2, d=Four_mm_screw, center=true);
+                            cylinder(h=slide_depth * 2, d=four_mm_screw, center=true);
                         }
                     }
                 }
@@ -120,10 +120,10 @@ module rack_end_plate() {
             // Countersink holes
             hole_x_displacement = inner_width/2 + extrusion_dim/2;
             hole_y_displacement = inner_depth/2 + extrusion_dim/2;
-            translate([hole_x_displacement, hole_y_displacement, -slip]) flat_screw(Five_mm_screw_hole, 2);
-            translate([hole_x_displacement, -hole_y_displacement, -slip]) flat_screw(Five_mm_screw_hole, 2);
-            translate([-hole_x_displacement, -hole_y_displacement, -slip]) flat_screw(Five_mm_screw_hole, 2);
-            translate([-hole_x_displacement, hole_y_displacement, -slip]) flat_screw(Five_mm_screw_hole, 2);
+            translate([hole_x_displacement, hole_y_displacement, -slip]) flat_screw(five_mm_screw_hole, 2);
+            translate([hole_x_displacement, -hole_y_displacement, -slip]) flat_screw(five_mm_screw_hole, 2);
+            translate([-hole_x_displacement, -hole_y_displacement, -slip]) flat_screw(five_mm_screw_hole, 2);
+            translate([-hole_x_displacement, hole_y_displacement, -slip]) flat_screw(five_mm_screw_hole, 2);
         }
 
         // Grid pattern
@@ -194,11 +194,11 @@ module rack_support_plate(across_width=false) {
         // Screw holes
         // Left
         translate([-plate_length/2 + extrusion_dim/2, 0, 0]) {
-            flat_screw(Five_mm_screw_hole, 2);
+            flat_screw(five_mm_screw_hole, 2);
         }
         // Right
         translate([plate_length/2 - extrusion_dim/2, 0, 0]) {
-            flat_screw(Five_mm_screw_hole, 2);
+            flat_screw(five_mm_screw_hole, 2);
         }
     }
 }
@@ -276,11 +276,11 @@ module half_handle() {
 
         // Screw shank
         // Head diameter is twice the thread diameter
-        screw_size = Five_mm_screw_hole;
+        screw_size = five_mm_screw_hole;
         screw_head_height = (extrusion_dim/2 - screw_size) * tan(handle_angle);
         translate([0, half_length - extrusion_dim/2, screw_head_height]) {
             rotate([180, 0, 0]) {
-                flat_screw(Five_mm_screw_hole, finger_clearance + extrusion_dim);
+                flat_screw(five_mm_screw_hole, finger_clearance + extrusion_dim);
             }
         }
     }

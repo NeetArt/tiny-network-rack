@@ -1,26 +1,27 @@
-$fn = 100 * 1;
+$fn = 50 * 1;
 // width is along the x axis
 // depth is along the y axis
-extrusion_dim    = 20 * 1;
-inner_width      = 195 * 1;
-inner_depth      = 202 * 1;
-full_width       = inner_width + (extrusion_dim * 2);
-full_depth       = inner_depth + (extrusion_dim * 2);
-rack_unit        = 25 * 1;
-plate_thickness  = 3 * 1;
-finger_clearance = extrusion_dim;
-handle_angle     = 60;
-slip             = 0.1 * 1; // additional dimension for clean cuts in model
-clearance        = 0.1 * 1; // clearance between joined parts
+extrusion_dim           = 20 * 1;
+inner_width             = 195 * 1;
+inner_depth             = 202 * 1;
+full_width              = inner_width + (extrusion_dim * 2);
+full_depth              = inner_depth + (extrusion_dim * 2);
+rack_unit               = 30 * 1;
+plate_thickness         = 3 * 1;
+finger_clearance        = extrusion_dim;
+handle_angle            = 60;
+slip                    = 0.1 * 1; // additional dimension for clean cuts in model
+clearance               = 0.1 * 1; // clearance between joined parts
+back_screw_hole_axis    = 5; // X & Y (X == Y) dimensions of the center of back plate screw hole
 
 //Hole size for 4mm screws or freedom unit equivalent
-Four_mm_screw = 3.8 * 1;
+four_mm_screw           = 3.6 * 1;
 //Hole size for 5mm screws or freedom unit equivalent
-Five_mm_screw = 4.8 * 1;
+five_mm_screw           = 4.6 * 1;
 // Hole size for 4 mm screw no threading
-Four_mm_screw_hole  = 4 * 1;
+four_mm_screw_hole      = 4 * 1;
 // Hole size for 5 mm screw no threading
-Five_mm_screw_hole  = 5 * 1;
+five_mm_screw_hole      = 5 * 1;
 
 
 Units = 10;
