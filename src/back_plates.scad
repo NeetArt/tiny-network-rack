@@ -22,40 +22,50 @@ module cloud_key_back_plate() {
             blank_base_plate(ck_width, ck_depth, screw_traps=false);
         }
 
+        // Generate the screw traps manually on the wall since they need to be
+        // a little further up to accomodate the base plate hanging slightly below the face plate
         // left wall
         translate([plate_thickness, 0, 0]) {
             rotate([0, -90, 0]) {
-                blank_base_plate(ck_height, ck_depth);
+                blank_base_plate(ck_height + plate_thickness, ck_depth, screw_traps=false);
             }
         }
 
         // right wall
-        translate([plate_thickness + ck_width, 0, ck_height]) {
+        translate([plate_thickness + ck_width, 0, ck_height + plate_thickness]) {
             rotate([0, 90, 0]) {
-                blank_base_plate(ck_height, ck_depth);
+                blank_base_plate(ck_height + plate_thickness, ck_depth, screw_traps=false);
             }
         }
 
-        // left position notch
-        translate([plate_thickness, 12 - plate_thickness, 10]) {
-            hull() {
-                translate([0, 0, 1]) {
-                    sphere(r=1);
-                }
-                translate([0, 0, 3]) {
-                    sphere(r=1);
+        // side notches
+        for (notch_x=[plate_thickness, plate_thickness + ck_width]) {
+            translate([notch_x, 12 - plate_thickness, 10 + plate_thickness]) {
+                hull() {
+                    translate([0, 0, 1]) {
+                        sphere(r=1);
+                    }
+                    translate([0, 0, 3]) {
+                        sphere(r=1);
+                    }
                 }
             }
         }
 
-        // right position notch
-        translate([plate_thickness + ck_width, 12 - plate_thickness, 10]) {
-            hull() {
-                translate([0, 0, 1]) {
-                    sphere(r=1);
+        // screw traps left
+        for (trap_z=[3, ck_height + plate_thickness - 10]) {
+            translate([0, 0, trap_z]) {
+                rotate([0, -90, 0]) {
+                    plate_screw_trap();
                 }
-                translate([0, 0, 3]) {
-                    sphere(r=1);
+            }
+        }
+
+        // screw traps right
+        for (trap_z=[3, ck_height + plate_thickness - 10]) {
+            translate([ck_width + (plate_thickness * 2), 0, trap_z + 10]) {
+                rotate([0, 90, 0]) {
+                    plate_screw_trap();
                 }
             }
         }
@@ -92,12 +102,10 @@ module blank_base_plate(width, depth, screw_traps=true) {
         }
 
         if (screw_traps) {
-            translate([0, 0, plate_thickness]) {
-                plate_screw_trap();
-            }
-
-            translate([width - 10, 0, plate_thickness]) {
-                plate_screw_trap();
+            for (trap_x=[0, width - 10]) {
+                translate([trap_x, 0, plate_thickness]) {
+                    plate_screw_trap();
+                }
             }
         }
     }

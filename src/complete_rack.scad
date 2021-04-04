@@ -1,8 +1,9 @@
 include<common.scad>;
 use<rack_frame.scad>;
 use<face_plates.scad>;
+use<back_plates.scad>;
 
-rack_structure(Units);
+//rack_structure(Units);
 
 /*
  *
@@ -86,3 +87,12 @@ module rack_structure(units) {
         }
     }
 }
+
+// rotate([-90, 180, 0]) {
+//     unifi_cloud_key_plate();
+// }
+
+// cutout_y_drift = (rack_unit - 27.3)/2;
+// translate([-full_width/2 + extrusion_dim + 10 - plate_thickness, plate_thickness, -rack_unit/2 + cutout_y_drift - 3]) {
+//     cloud_key_back_plate();
+// }

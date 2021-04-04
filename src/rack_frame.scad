@@ -2,9 +2,9 @@ include<common.scad>;
 
 //flat_screw(five_mm_screw_hole, 10);
 //full_handle();
-extrusion_slide(5, true, true);
+//extrusion_slide(5, true, true);
 //extrusion_rail(Units);
-//rack_end_plate();
+rack_end_plate();
 //color("Tomato") model_split_shape(full_width, full_depth, true, false);
 //color("DarkOrange") model_split_shape(full_width, full_depth, false, false);
 //color("Tomato") { rack_end_plate_sections(1);}
@@ -120,10 +120,14 @@ module rack_end_plate() {
             // Countersink holes
             hole_x_displacement = inner_width/2 + extrusion_dim/2;
             hole_y_displacement = inner_depth/2 + extrusion_dim/2;
-            translate([hole_x_displacement, hole_y_displacement, -slip]) flat_screw(five_mm_screw_hole, 2);
-            translate([hole_x_displacement, -hole_y_displacement, -slip]) flat_screw(five_mm_screw_hole, 2);
-            translate([-hole_x_displacement, -hole_y_displacement, -slip]) flat_screw(five_mm_screw_hole, 2);
-            translate([-hole_x_displacement, hole_y_displacement, -slip]) flat_screw(five_mm_screw_hole, 2);
+
+            for (hole_x=[-hole_x_displacement, hole_x_displacement]) {
+                for (hole_y=[-hole_y_displacement, hole_y_displacement]) {
+                    translate([hole_x, hole_y, -slip]) {
+                        flat_screw(five_mm_screw_hole, 2);
+                    }
+                }
+            }
         }
 
         // Grid pattern
