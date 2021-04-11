@@ -5,8 +5,9 @@ include<common.scad>;
 //unifi_switch_face_plate();
 //unifi_cloud_key_plate();
 //patch_panel_face_plate();
-unifi_switch_anchor_plate();
+//unifi_switch_anchor_plate();
 //unifi_switch_anchor_plate(true);
+philips_hue_lutron_face_plate();
 
 /************************/
 /*** Blank face plate ***/
@@ -216,7 +217,7 @@ module unifi_switch_anchor_plate(mirrored=false) {
 
 /*
  *
- * The following method creates a face plate for cloud key. This is still a WIP
+ * The following method creates a face plate for cloud key.
  * Cloud key dimensions: (W x H x D) 47 x 27.3 x 120
  *
  */
@@ -345,6 +346,75 @@ module patch_panel_keystone_model() {
 /*** Philips Hue and Lutron hubs face plate ***/
 /**********************************************/
 
+/*
+ *
+ * The following method creates a face plate for Philips Hue and Lutron.
+ * Some other interesting information:
+ * Lutron has LEDs at 11-11.5 mm from bottom. Philips Hue has LEDs 26.5mm from bottom
+ *
+ */
+module philips_hue_lutron_face_plate() {
+    difference() {
+        union() {
+            blank_face_plate(1);
+
+            // Lutron LED light pipe - wall
+            translate([-inner_width/8 - back_screw_hole_axis, -rack_unit/2 - 4 + 11 + plate_thickness + 0.8, 0]) {
+                cylinder(d=3.2, h=12 + plate_thickness);
+            }
+
+            // Philips Hue LEDs light pipe - wall
+            for (led_wall=[-15, 0, 15]) {
+                translate([full_width/4 - extrusion_dim/2 + led_wall, rack_unit/2 - plate_thickness - 1, 0]) {
+                    cylinder(d=3.2, h=3 + plate_thickness);
+                }
+            }
+        }
+
+        // Lutron LED light pipe - hole
+        translate([-inner_width/8 - back_screw_hole_axis, -rack_unit/2 - 4 + 11 + plate_thickness + 0.8, -slip/2]) {
+            cylinder(d=1.6, h=12 + plate_thickness + slip);
+        }
+
+        // Philips Hue LEDs light pipe - hole
+        for (led_wall=[-15, 0, 15]) {
+            translate([full_width/4 - extrusion_dim/2 + led_wall, rack_unit/2 - plate_thickness - 1, -slip/2]) {
+                cylinder(d=1.6, h=3 + plate_thickness + slip);
+            }
+        }
+
+        translate([full_width/4 - extrusion_dim/2, back_screw_hole_axis, 1-slip]) {
+            rotate([0, 180, 0]) {
+                linear_extrude(1) {
+                    text("PHILIPS HUE", font="Arial Rounded MT Bold", size=9, halign="center", valign="center");
+                }
+            }
+        }
+
+        translate([-full_width/4 + extrusion_dim/2 - back_screw_hole_axis, back_screw_hole_axis, 1-slip]) {
+            rotate([0, 180, 0]) {
+                linear_extrude(1) {
+                    text("LUTRON", font="Arial Rounded MT Bold", size=9, halign="center", valign="center");
+                }
+            }
+        }
+
+        // Screw holes for Philips Hue back plate, looking at XY plane from +Z towards -Z a.k.a the back of the plate
+        for (hole_x=[inner_width/2 - back_screw_hole_axis, inner_width/4 - back_screw_hole_axis/2, 0]) {
+            translate([hole_x, -rack_unit/2 + plate_thickness + back_screw_hole_axis, 0]) {
+                flat_screw(four_mm_screw_hole, 2);
+            }
+        }
+
+        // Screw holes for Lutron back plate, looking at XY plane from +Z towards -Z a.k.a the back of the plate
+        for (hole_x=[-inner_width/2 + back_screw_hole_axis, -inner_width/4 - back_screw_hole_axis/2, -back_screw_hole_axis*2]) {
+            translate([hole_x, -rack_unit/2 + plate_thickness + back_screw_hole_axis, 0]) {
+                flat_screw(four_mm_screw_hole, 2);
+            }
+        }
+    }
+}
 
 // One rack unit with Lutron Hub (micro usb) and Philips Hub (Barrel Jack 2.5/5.5 center +ve) on either sides
+// Lutron has LEDs at 11-11.5 mm from bottom. Philips Hue has LEDs 26.5mm from bottom
 // One rack unit for pihole and VPN

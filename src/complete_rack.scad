@@ -4,6 +4,8 @@ use<face_plates.scad>;
 use<back_plates.scad>;
 
 //rack_structure(Units);
+//cloud_key_test();
+philips_hue_lutron_test();
 
 /*
  *
@@ -88,11 +90,28 @@ module rack_structure(units) {
     }
 }
 
-// rotate([-90, 180, 0]) {
-//     unifi_cloud_key_plate();
-// }
+module cloud_key_test() {
+    rotate([-90, 180, 0]) {
+        unifi_cloud_key_plate();
+    }
 
-// cutout_y_drift = (rack_unit - 27.3)/2;
-// translate([-full_width/2 + extrusion_dim + 10 - plate_thickness, plate_thickness, -rack_unit/2 + cutout_y_drift - 3]) {
-//     cloud_key_back_plate();
-// }
+    cutout_y_drift = (rack_unit - 27.3)/2;
+    translate([-full_width/2 + extrusion_dim + 10 - plate_thickness, plate_thickness, -rack_unit/2 + cutout_y_drift - 3]) {
+        cloud_key_back_plate();
+    }
+}
+
+module philips_hue_lutron_test() {
+    philips_hue_back_plate();
+    translate([0, 180, 0]) philips_hue_back_anchor_plate();
+    translate([inner_width/2 + 5, 0, -4])
+        lutron_back_plate();
+    translate([inner_width, 160, 0])
+        lutron_back_anchor_plate();
+
+    translate([inner_width/2, -plate_thickness, rack_unit/2]) {
+        rotate([-90, 180, 0]) {
+            philips_hue_lutron_face_plate();
+        }
+    }
+}
